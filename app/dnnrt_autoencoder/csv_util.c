@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#define LINE_BUF_SIZE 128
+#define LINE_BUF_SIZE (128)
 static int
 load_csv_internal(const char *csv_path, float norm_factor, float *output_buffer, int output_num)
 {
