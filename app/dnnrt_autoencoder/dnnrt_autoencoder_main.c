@@ -41,12 +41,6 @@ typedef struct
 #define ALLOC_UNIT      (CXD5602_SINGLE_TILE_SIZE)
 
 /****************************************************************************
- * Private Data
- ****************************************************************************/
-static float *s_wave_buffer;
-static void *s_model_buffer;
-
-/****************************************************************************
  * Private Functionsdn
  ****************************************************************************/
 static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
@@ -96,9 +90,9 @@ static void *memtile_alloc(mpshm_t *pshm, int size)
     return NULL;
   }
   shm_vbuf = mpshm_attach(pshm, 0);
-  shm_phead = mpshm_virt2phys(pshm, shm_vbuf);
-  shm_ptail = mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (size - 1)));
-  printf("ALLOC: %08x - %08x [virt:%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, size);
+  shm_phead = (void *)mpshm_virt2phys(pshm, shm_vbuf);
+  shm_ptail = (void *)mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (size - 1)));
+  printf("ALLOC: [phys:0x%08x-0x%08x][virt:0x%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, size);
   return shm_phead;
 }
 
@@ -107,17 +101,17 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
   int ret = 0;
   mpshm_t shm_model;
   mpshm_t shm_input;
-  void *shm_vbuf;
-  void *shm_phead;
-  void *shm_ptail;
   dnn_runtime_t rt;
   dnn_config_t config = {.cpu_num = 1 };
   nn_network_t *network;
   autoencoder_setting_t setting = { 0 };
   void *inputs[1];
   float *s_wave_buffer;
+  void *s_model_buffer;
   struct timeval begin, end;
   int *output_buffer;
+
+  parse_args(argc, argv, &setting);
 
   s_model_buffer = memtile_alloc(&shm_model, ALLOC_UNIT);
   if (s_model_buffer == NULL) {
@@ -125,22 +119,20 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
     goto err_model_alloc;
   }
   printf("ADDR:%08x: for s_model_buffer\n", s_model_buffer);
-
   s_wave_buffer = memtile_alloc(&shm_input, ALLOC_UNIT);
   if (s_wave_buffer == NULL) {
     ret = -errno;
     goto err_input_alloc;
   }
-  printf("ADDR:%08x: for s_model_buffer\n", s_model_buffer);
-
-  parse_args(argc, argv, &setting);
-
+  s_wave_buffer = (void *)(((uint32_t)s_model_buffer) + 96 * 1024);
+  printf("ADDR:%08x: for s_wave_buffer\n", s_wave_buffer);
   ret = csv_load(setting.csv_path, 1.0f, s_wave_buffer, INPUT_WAVE_LEN);
   if (ret != 0) {
     printf("ERROR occur in csv_load(ret=%d)\n", ret);
     goto load_error;
   }
   dump_float((float *)s_wave_buffer, INPUT_WAVE_LEN);
+  inputs[0] = (void *)s_wave_buffer;
 
   printf("----load_nnb_network----\n");
   fflush(stdout);
@@ -150,11 +142,7 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
       printf("load nnb file failed\n");
       goto load_error;
     }
-  else
-    {
-      printf("exit load nnb file\n");
-      //goto load_error;
-    }
+  printf("exit load nnb file\n");
   fflush(stdout);
 
   /* Step-A: initialize the whole dnnrt subsystem */
@@ -166,7 +154,6 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
       printf("dnn_initialize() failed due to %d", ret);
       goto dnn_error;
     }
-
 
   /* Step-B: instantiate a neural network defined
    * by nn_network_t as a dnn_runtime_t object */
@@ -183,7 +170,9 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
   printf("----STEP:C----\n");
   fflush(stdout);
   printf("start dnn_runtime_forward()\n");
+  printf(" -->> input[0]=0x%08x\n", inputs[0]);
   fflush(stdout);
+  
   gettimeofday(&begin, 0);
   ret = dnn_runtime_forward(&rt, (const void**)inputs, 1);
   gettimeofday(&end, 0);
@@ -196,15 +185,20 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
   /* Step-D: obtain the output from this dnn_runtime_t */
   printf("----STEP:D----\n");
   fflush(stdout);
-  output_buffer = dnn_runtime_output_buffer(&rt, 0u);
-  printf("<0> ready output (0x%08x)\n", output_buffer);
-  //dump_int((uint32_t *)output_buffer, OUTPUT_WAVE_LEN);
-  dump_float((float *)output_buffer, OUTPUT_WAVE_LEN);
 
-  output_buffer = dnn_runtime_output_buffer(&rt, 1u);
-  printf("<1> ready output (0x%08x)\n", output_buffer);
-  //dump_int((uint32_t *)output_buffer, OUTPUT_WAVE_LEN);
-  dump_float((float *)output_buffer, OUTPUT_WAVE_LEN);
+  int output_num;
+  int output_idx;
+  int buf_cnt;
+  output_num = dnn_runtime_output_num(&rt);
+  printf("output_num = %d\n", output_num);
+
+  for (output_idx = 0; output_idx < output_num; output_idx++) 
+    {
+      output_buffer = dnn_runtime_output_buffer(&rt, output_idx);
+      buf_cnt = dnn_runtime_output_size(&rt, output_idx);
+      printf("<%d> ready output (0x%08x, num=%d)\n", output_idx, output_buffer, buf_cnt);
+      dump_float((float *)output_buffer, buf_cnt);
+    }
 
 fin:
   /* Step-F: free memories allocated to dnn_runtime_t */
