@@ -31,8 +31,6 @@ nn_network_t *load_nnb_network(const char *nnb_path, void *target)
   int ret;
   FILE *file = NULL;
   uint32_t exp_data_bsize, act_data_bsize;
-  //char tmpbuf[1024];
-  //nn_network_t *network = tmpbuf;
   nn_network_t *network = target;
 
   if (nnb_path == NULL)

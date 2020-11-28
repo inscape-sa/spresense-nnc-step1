@@ -45,16 +45,29 @@ typedef struct
  ****************************************************************************/
 static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
 {
+  int idx;
   setting->skip_norm = false;
 
-  /* set autoencoder_setting_t::{nnb_path,pgm_path} to argv[] if necessary */
-  setting->nnb_path = (optind < argc) ? argv[optind++] : DNN_NNB_PATH;
-  setting->csv_path = (optind < argc) ? argv[optind] : DNN_WAV_PATH;
+  for (idx = 0; idx < argc; idx++) 
+    {
+      printf("argv[%d]='%s'\n", idx, argv[idx]);
+    }
+
+  setting->nnb_path = DNN_NNB_PATH;
+  setting->csv_path = DNN_WAV_PATH;
+  if (argc == 3) {
+    setting->nnb_path = argv[1];
+    setting->csv_path = argv[2];
+  } else {
+    /* nop */
+    printf("usage: dnnrt_autoencoder [path_model] [path_wav]");
+  }
 
   /* print autoencoder_setting_t */
   printf("Load nnb file: %s\n", setting->nnb_path);
   printf("Load wave file: %s\n", setting->csv_path);
   printf("Wave Normalization (1.0/255.0): skipped\n");
+  fflush(stdout);
 }
 
 static void dump_int(uint32_t *buf, int num)
@@ -63,8 +76,10 @@ static void dump_int(uint32_t *buf, int num)
   printf("\n");
   for(idx = 0; idx < num; idx++) {
     printf("buf[%d] %08x,", idx, buf[idx]);
+    fflush(stdout);
   }
   printf("\n\n");
+  fflush(stdout);
 }
 
 static void dump_float(float *buf, int num)
@@ -73,8 +88,10 @@ static void dump_float(float *buf, int num)
   printf("\n");
   for(idx = 0; idx < num; idx++) {
     printf("buf[%d] %f,", idx, buf[idx]);
+    fflush(stdout);
   }
   printf("\n\n");
+  fflush(stdout);
 }
 
 static void *memtile_alloc(mpshm_t *pshm, int size)
@@ -93,6 +110,7 @@ static void *memtile_alloc(mpshm_t *pshm, int size)
   shm_phead = (void *)mpshm_virt2phys(pshm, shm_vbuf);
   shm_ptail = (void *)mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (size - 1)));
   printf("ALLOC: [phys:0x%08x-0x%08x][virt:0x%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, size);
+  fflush(stdout);
   return shm_phead;
 }
 
