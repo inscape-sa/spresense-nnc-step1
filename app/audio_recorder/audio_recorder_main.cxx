@@ -61,9 +61,6 @@
 #include "include/msgq_pool.h"
 #include "include/pool_layout.h"
 #include "include/fixed_fence.h"
-#ifdef CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC
-#include "userproc_command.h"
-#endif /* CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC */
 
 /* Section number of memory layout to use */
 
@@ -464,11 +461,7 @@ static bool app_create_audio_sub_system(void)
   frontend_create_param.msgq_id.mng         = MSGQ_AUD_MGR;
   frontend_create_param.msgq_id.dsp         = MSGQ_AUD_PREDSP;
   frontend_create_param.pool_id.input       = S0_INPUT_BUF_POOL;
-#ifdef CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC
-  frontend_create_param.pool_id.output      = S0_PREPROC_BUF_POOL;
-#else
   frontend_create_param.pool_id.output      = S0_NULL_POOL;
-#endif
   frontend_create_param.pool_id.dsp         = S0_PRE_APU_CMD_POOL;
 
   AS_CreateMicFrontend(&frontend_create_param, NULL);
@@ -823,45 +816,6 @@ static bool app_stop_recorder(void)
   return true;
 }
 
-#ifdef CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC
-static bool app_init_preproc_dsp(void)
-{
-  static InitParam s_initparam;
-
-  AudioCommand command;
-  command.header.packet_length = LENGTH_INIT_PREPROCESS_DSP;
-  command.header.command_code  = AUDCMD_INIT_PREPROCESS_DSP;
-  command.header.sub_code      = 0x00;
-  command.init_preproc_param.packet_addr = reinterpret_cast<uint8_t *>(&s_initparam);
-  command.init_preproc_param.packet_size = sizeof(s_initparam);
-  AS_SendAudioCommand(&command);
-
-  AudioResult result;
-  AS_ReceiveAudioResult(&result);
-  return printAudCmdResult(command.header.command_code, result);
-}
-
-static bool app_set_preproc_dsp(void)
-{
-  static SetParam s_setparam;
-
-  s_setparam.enable = true;
-  s_setparam.coef   = 99;
-
-  AudioCommand command;
-  command.header.packet_length = LENGTH_SET_PREPROCESS_DSP;
-  command.header.command_code  = AUDCMD_SET_PREPROCESS_DSP;
-  command.header.sub_code      = 0x00;
-  command.set_preproc_param.packet_addr = reinterpret_cast<uint8_t *>(&s_setparam);
-  command.set_preproc_param.packet_size = sizeof(s_setparam);
-  AS_SendAudioCommand(&command);
-
-  AudioResult result;
-  AS_ReceiveAudioResult(&result);
-  return printAudCmdResult(command.header.command_code, result);
-}
-#endif /* CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC */
-
 static bool app_set_clkmode(int clk_mode)
 {
   AudioCommand command;
@@ -1138,30 +1092,12 @@ extern "C" int audio_recorder_main(int argc, FAR char *argv[])
   /* Initialize MicFrontend. */
 
   if (!app_init_micfrontend(
-#ifdef CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC
-                            AsMicFrontendPreProcUserCustom,
-#else /* CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC */
                             AsMicFrontendPreProcThrough,
-#endif /* CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC */
                             "/mnt/sd0/BIN/PREPROC"))
     {
       printf("Error: app_init_micfrontend() failure.\n");
       goto ErrorReturn;
     }
-
-#ifdef CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC
-  if (!app_init_preproc_dsp())
-    {
-      printf("Error: app_init_preproc_dsp() failure.\n");
-      goto ErrorReturn;
-    }
-
-  if (!app_set_preproc_dsp())
-    {
-      printf("Error: app_set_preproc_dsp() failure.\n");
-      goto ErrorReturn;
-    }
-#endif /* CONFIG_EXAMPLES_AUDIO_RECORDER_USEPREPROC */
 
   /* Start recorder operation. */
 
