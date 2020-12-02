@@ -254,9 +254,10 @@ static bool app_init_wav_header(void)
                                  s_recorder_info.file.bitwidth);
 }
 
-static bool app_open_output_file(void)
+static bool app_open_output_file(char *p_setfilename)
 {
   static char fname[MAX_PATH_LENGTH];
+  static char file[MAX_PATH_LENGTH];
 
   struct tm *cur_time;
   struct timespec cur_sec;
@@ -264,60 +265,45 @@ static bool app_open_output_file(void)
   clock_gettime(CLOCK_REALTIME, &cur_sec);
   cur_time = gmtime(&cur_sec.tv_sec);
 
-  if ((s_recorder_info.file.codec_type == AS_CODECTYPE_MP3) &&
-      (s_recorder_info.file.format_type == FORMAT_TYPE_RAW))
-    {
-      snprintf(fname, MAX_PATH_LENGTH, "%s/%04d%02d%02d_%02d%02d%02d.mp3",
-        RECFILE_ROOTPATH,
-        cur_time->tm_year,
-        cur_time->tm_mon,
-        cur_time->tm_mday,
-        cur_time->tm_hour,
-        cur_time->tm_min,
-        cur_time->tm_sec);
-    }
-  else if (s_recorder_info.file.codec_type == AS_CODECTYPE_LPCM)
-    {
-      if (s_recorder_info.file.format_type == FORMAT_TYPE_WAV)
-        {
-          snprintf(fname, MAX_PATH_LENGTH, "%s/%04d%02d%02d_%02d%02d%02d.wav",
-            RECFILE_ROOTPATH,
-            cur_time->tm_year,
-            cur_time->tm_mon,
-            cur_time->tm_mday,
-            cur_time->tm_hour,
-            cur_time->tm_min,
-            cur_time->tm_sec);
-        }
-      else
-        {
-          snprintf(fname, MAX_PATH_LENGTH, "%s/%04d%02d%02d_%02d%02d%02d.pcm",
-            RECFILE_ROOTPATH,
-            cur_time->tm_year,
-            cur_time->tm_mon,
-            cur_time->tm_mday,
-            cur_time->tm_hour,
-            cur_time->tm_min,
-            cur_time->tm_sec);
-        }
-    }
-  else if ((s_recorder_info.file.codec_type == AS_CODECTYPE_OPUS) &&
-           (s_recorder_info.file.format_type == FORMAT_TYPE_RAW))
-    {
-      snprintf(fname, MAX_PATH_LENGTH, "%s/%04d%02d%02d_%02d%02d%02d.raw",
-        RECFILE_ROOTPATH,
-        cur_time->tm_year,
-        cur_time->tm_mon,
-        cur_time->tm_mday,
-        cur_time->tm_hour,
-        cur_time->tm_min,
-        cur_time->tm_sec);
-    }
-  else
-    {
-      printf("Unsupported format\n");
-      return false;
-    }
+  if (p_setfilename == NULL) {
+    snprintf(file, MAX_PATH_LENGTH, "%s/%04d%02d%02d_%02d%02d%02d",
+      RECFILE_ROOTPATH,
+      cur_time->tm_year,
+      cur_time->tm_mon,
+      cur_time->tm_mday,
+      cur_time->tm_hour,
+      cur_time->tm_min,
+      cur_time->tm_sec);
+
+    if ((s_recorder_info.file.codec_type == AS_CODECTYPE_MP3) &&
+        (s_recorder_info.file.format_type == FORMAT_TYPE_RAW))
+      {
+        snprintf(fname, MAX_PATH_LENGTH, "%s.mp3", file);
+      }
+    else if (s_recorder_info.file.codec_type == AS_CODECTYPE_LPCM)
+      {
+        if (s_recorder_info.file.format_type == FORMAT_TYPE_WAV)
+          {
+            snprintf(fname, MAX_PATH_LENGTH, "%s.wav", file);
+          }
+        else
+          {
+            snprintf(fname, MAX_PATH_LENGTH, "%s.pcm", file);
+          }
+      }
+    else if ((s_recorder_info.file.codec_type == AS_CODECTYPE_OPUS) &&
+            (s_recorder_info.file.format_type == FORMAT_TYPE_RAW))
+      {
+        snprintf(fname, MAX_PATH_LENGTH, "%s.raw", file);
+      }
+    else
+      {
+        printf("Unsupported format\n");
+        return false;
+      }
+  } else {
+    snprintf(fname, MAX_PATH_LENGTH, "%s", p_setfilename);
+  }
 
   s_recorder_info.file.fd = fopen(fname, "w");
   if (s_recorder_info.file.fd == 0)
@@ -758,10 +744,10 @@ static bool app_init_recorder(codec_type_e codec_type,
 
 }
 
-static bool app_start_recorder(void)
+static bool app_start_recorder(char *p_setfilename)
 {
   s_recorder_info.file.size = 0;
-  if (!app_open_output_file())
+  if (!app_open_output_file(p_setfilename))
     {
       return false;
     }
@@ -1005,7 +991,13 @@ void app_recorde_process(uint32_t rec_time)
 
 extern "C" int audio_recorder_main(int argc, FAR char *argv[])
 {
+  char *p_setfilename = NULL;
+
   printf("Start AudioRecorder example\n");
+
+  if (argc >= 2) {
+    p_setfilename = argv[1];
+  }
 
   /* Set audio sampling rates. */
   sampling_rate_e sampling_rate = SAMPLING_RATE_48K;
@@ -1101,7 +1093,7 @@ extern "C" int audio_recorder_main(int argc, FAR char *argv[])
 
   /* Start recorder operation. */
 
-  if (!app_start_recorder())
+  if (!app_start_recorder(p_setfilename))
     {
       printf("Error: app_start_recorder() failure.\n");
       goto ErrorReturn;
