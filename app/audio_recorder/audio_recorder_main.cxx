@@ -102,7 +102,7 @@ using namespace MemMgrLite;
 
 /* Recording time(sec). */
 
-#define RECORDER_REC_TIME 1
+#define RECORDER_REC_TIME 10
 
 /****************************************************************************
  * Private Function Prototypes
@@ -556,6 +556,28 @@ static bool app_init_mic_gain(void)
   return printAudCmdResult(command.header.command_code, result);
 }
 
+static channel_type_e convert_chan_type(int use_mic_channerl_num)
+{
+  switch(use_mic_channerl_num)
+    {
+      case 1:
+        return CHAN_TYPE_MONO;
+      case 2:
+        return CHAN_TYPE_STEREO;
+      case 4:
+        return CHAN_TYPE_4CH;
+      case 6:
+        return CHAN_TYPE_6CH;
+      case 8:        
+        return CHAN_TYPE_8CH;
+      default:
+        printf("Error: Invalid channel type(%d)\n", use_mic_channerl_num);
+        while(1);
+          // NOP - STACK
+        return CHAN_TYPE_MONO;
+    }
+}
+
 static bool app_set_recording_param(codec_type_e codec_type,
                                     sampling_rate_e sampling_rate,
                                     channel_type_e ch_type,
@@ -992,9 +1014,13 @@ void app_recorde_process(uint32_t rec_time)
 extern "C" int audio_recorder_main(int argc, FAR char *argv[])
 {
   char *p_setfilename = NULL;
+  int setreclen = RECORDER_REC_TIME;
 
   printf("Start AudioRecorder example\n");
 
+  if (argc >= 3) {
+    setreclen = atoi(argv[2]);
+  }
   if (argc >= 2) {
     p_setfilename = argv[1];
   }
@@ -1071,10 +1097,9 @@ extern "C" int audio_recorder_main(int argc, FAR char *argv[])
     }
 
   /* Initialize recorder. */
-
   if (!app_init_recorder(CODEC_TYPE_LPCM,
                          sampling_rate,
-                         CHAN_TYPE_STEREO,
+                         convert_chan_type(USE_MIC_CHANNEL_NUM),
                          BITWIDTH_16BIT))
     {
       printf("Error: app_init_recorder() failure.\n");
@@ -1101,9 +1126,9 @@ extern "C" int audio_recorder_main(int argc, FAR char *argv[])
 
   /* Running... */
 
-  printf("Running time is %d sec\n", RECORDER_REC_TIME);
+  printf("Running time is %d sec\n", setreclen);
 
-  app_recorde_process(RECORDER_REC_TIME);
+  app_recorde_process(setreclen);
 
   /* Stop recorder operation. */
 

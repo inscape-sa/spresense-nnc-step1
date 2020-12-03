@@ -18,6 +18,8 @@
 #include "loader_large_nnb.h"
 #include "csv_util.h"
 
+#include "../util_dump/util_dump.h"
+
 /****************************************************************************
  * Type Definition
  ****************************************************************************/
@@ -70,48 +72,37 @@ static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
   fflush(stdout);
 }
 
-static void dump_int(uint32_t *buf, int num)
-{
-  int idx;
-  printf("\n");
-  for(idx = 0; idx < num; idx++) {
-    printf("buf[%d] %08x,", idx, buf[idx]);
-    fflush(stdout);
-  }
-  printf("\n\n");
-  fflush(stdout);
-}
-
-static void dump_float(float *buf, int num)
-{
-  int idx;
-  printf("\n");
-  for(idx = 0; idx < num; idx++) {
-    printf("buf[%d] %f,", idx, buf[idx]);
-    fflush(stdout);
-  }
-  printf("\n\n");
-  fflush(stdout);
-}
-
 static void *memtile_alloc(mpshm_t *pshm, int size)
 {
   int ret;
+  int alloc_size = CXD5602_SINGLE_TILE_SIZE;
   void *shm_vbuf;
   void *shm_phead;
   void *shm_ptail;
 
+  if (size > alloc_size)
+  {
+    printf("ERROR: Too Large alloc unit for memtile_alloc (%dbyte > MEMTILE(%dbyte))\n", size, alloc_size);
+    return NULL;
+  }
+
   ret = mpshm_init(pshm, 0, size);
   if (ret != 0) {
-    printf("Error occur in memtile_alloc\n");
+    printf("ERROR: mpshm_init/memtile_alloc(%d)\n", ret);
     return NULL;
   }
   shm_vbuf = mpshm_attach(pshm, 0);
   shm_phead = (void *)mpshm_virt2phys(pshm, shm_vbuf);
-  shm_ptail = (void *)mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (size - 1)));
-  printf("ALLOC: [phys:0x%08x-0x%08x][virt:0x%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, size);
+  shm_ptail = (void *)mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (alloc_size - 1)));
+  printf("ALLOC: [phys:0x%08x-0x%08x][virt:0x%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, alloc_size);
   fflush(stdout);
   return shm_phead;
+}
+
+static void memtile_free(mpshm_t *pshm)
+{
+  mpshm_detach(pshm);
+  mpshm_destroy(pshm);
 }
 
 int dnnrt_autoencoder_main(int argc, char *argv[])
@@ -226,11 +217,9 @@ rt_error:
   dnn_finalize();
 dnn_error:
 load_error:
-  mpshm_detach(&shm_input);
-  mpshm_destroy(&shm_input);
+  memtile_free(&shm_input);
 err_input_alloc:
-  mpshm_detach(&shm_model);
-  mpshm_destroy(&shm_model);
+  memtile_free(&shm_model);
 err_model_alloc:
   return 0;
 }
