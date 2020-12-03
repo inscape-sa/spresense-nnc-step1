@@ -989,6 +989,9 @@ static bool app_finalize_libraries(void)
   return true;
 }
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 void app_recorde_process(uint32_t rec_time)
 {
   /* Timer Start */
@@ -1006,10 +1009,6 @@ void app_recorde_process(uint32_t rec_time)
 
     } while((time(&cur_time) - start_time) < rec_time);
 }
-
-/****************************************************************************
- * Public Functions
- ****************************************************************************/
 
 extern "C" int audio_recorder_main(int argc, FAR char *argv[])
 {

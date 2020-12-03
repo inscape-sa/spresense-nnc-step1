@@ -18,7 +18,7 @@
 #include "loader_large_nnb.h"
 #include "csv_util.h"
 
-#include "../util_dump/util_dump.h"
+#include "../util_misc/util_misc.h"
 
 /****************************************************************************
  * Type Definition
@@ -39,11 +39,11 @@ typedef struct
 #define INPUT_WAVE_SIZE (INPUT_WAVE_LEN * (sizeof(float)))
 #define OUTPUT_WAVE_LEN  (128)
 #define OUTPUT_WAVE_SIZE (OUTPUT_WAVE_LEN * (sizeof(float)))
-#define CXD5602_SINGLE_TILE_SIZE  (1024 * 128)
 #define ALLOC_UNIT      (CXD5602_SINGLE_TILE_SIZE)
 
+
 /****************************************************************************
- * Private Functionsdn
+ * Private Functions
  ****************************************************************************/
 static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
 {
@@ -71,7 +71,7 @@ static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
   printf("Wave Normalization (1.0/255.0): skipped\n");
   fflush(stdout);
 }
-
+#if 0
 static void *memtile_alloc(mpshm_t *pshm, int size)
 {
   int ret;
@@ -104,7 +104,10 @@ static void memtile_free(mpshm_t *pshm)
   mpshm_detach(pshm);
   mpshm_destroy(pshm);
 }
-
+#endif
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 int dnnrt_autoencoder_main(int argc, char *argv[])
 {
   int ret = 0;

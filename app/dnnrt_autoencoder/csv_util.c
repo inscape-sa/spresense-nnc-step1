@@ -2,6 +2,9 @@
  * dnnrt_lenet/csv_util.c
  ****************************************************************************/
 
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -9,7 +12,14 @@
 #include <errno.h>
 #include <fcntl.h>
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 #define LINE_BUF_SIZE (128)
+
+/****************************************************************************
+ * Private Function Prototypes
+ ****************************************************************************/
 static int
 load_csv_internal(const char *csv_path, float norm_factor, float *output_buffer, int output_num)
 {
@@ -60,6 +70,9 @@ file_open_err:
   return err;
 }
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 int csv_load(const char *csv_path, float norm_factor, float *output_buffer,
              int output_num)
 {

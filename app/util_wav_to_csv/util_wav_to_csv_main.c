@@ -1,3 +1,7 @@
+
+/****************************************************************************
+ * Included Files
+ ****************************************************************************/
 #include <sdk/config.h>
 #include <nuttx/config.h>
 #include <stdio.h>
@@ -8,10 +12,16 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/stat.h>
-#include "../util_dump/util_dump.h"
+#include "../util_misc/util_misc.h"
 
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
 #define NUM_ENTRY_BUF 512
 
+/****************************************************************************
+ * Private Type Declarations
+ ****************************************************************************/
 struct util_wav_header_s
 {
   /*! character "RIFF" */
@@ -42,8 +52,14 @@ struct util_wav_header_s
   uint32_t data_size;
 };
 
+/****************************************************************************
+ * Private Data
+ ****************************************************************************/
 typedef struct util_wav_header_s UTIL_WAVH;
 
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
 static int check_wav_header_and_get_entries(FILE *srcfp)
 {
   int ret;
@@ -83,6 +99,9 @@ err_fread_wav_header:
   return mainret;
 }
 
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
 int util_wav_to_csv_main(int argc, char *argv[])
 {
   int mainret = -EINVAL;
@@ -114,7 +133,7 @@ int util_wav_to_csv_main(int argc, char *argv[])
     skip_num = atoi(argv[3]);
     conv_num = atoi(argv[4]);
   }
-  printf("Convert %s -> %s\n", srcpath, dstpath);
+  printf("Convert %s -> %s (skip=%d, conv=%d)\n", srcpath, dstpath, skip_num, conv_num);
   
   srcfp = fopen(srcpath, "r");
   if (srcfp == NULL) {
