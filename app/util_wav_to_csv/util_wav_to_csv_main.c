@@ -160,6 +160,13 @@ int util_wav_to_csv_main(int argc, char *argv[])
     conv_num = src_record_num;
   }
 
+  if ((conv_num + skip_num) > (src_record_num)) {
+    printf("ERROR: Export Target is in Out-of-Range"
+      "(conv=%d + skip=%d > record=%d).\n", conv_num, skip_num, src_record_num);
+    mainret = -EINVAL;
+    goto err_src_fmt;
+  }
+
   outnum = 0;
   remain_num = conv_num;
   int req_num;

@@ -21,7 +21,10 @@
 #define BASE_DIR              "/mnt/sd0/REC"
 #define BASE_DNN_INPUT_EXT    "csv"
 #define ONESEC_CSV_CHUNK_NUM  (48 * 1024) /* 48kHz */
-#define GEN_WAV_CSV_NUM       (50)
+#define DNN_INPUT_CHUNK_NUM   (ONESEC_CSV_CHUNK_NUM / 2) /* 0.5sec */ 
+#define REC_WAV_SEC           (60)
+#define REC_WAV_SEC_TMP       (5)
+#define GEN_WAV_NUM           (REC_WAV_SEC * (ONESEC_CSV_CHUNK_NUM / DNN_INPUT_CHUNK_NUM) * 2)
 
 /****************************************************************************
  * Private Function Prototypes
@@ -91,16 +94,16 @@ int dnn_launcher_main(int argc, char *argv[])
     /** Gen DATA */
     /*****************************************************/
     /* Gen Mode - Phase.1 [Recording] */
-    snprintf(str_recsec, 15, "%d", (GEN_WAV_CSV_NUM / 2) + 2);
+    snprintf(str_recsec, 15, "%d", REC_WAV_SEC + REC_WAV_SEC_TMP);
     audio_recorder_main(SET_ARGC(audio_recoder_argv), audio_recoder_argv);
 
     /* Gen Mode - Phase.2 [Gen Training Data] */
     int gen_idx;
-    for (gen_idx = 0; gen_idx < GEN_WAV_CSV_NUM; gen_idx++) {
+    for (gen_idx = 0; gen_idx < GEN_WAV_NUM; gen_idx++) {
       filepath_dnnsrc[MAX_PATH_LENGTH - 1] = '\0';
       snprintf(filepath_dnnsrc, MAX_PATH_LENGTH - 1, "%s/%d.%s", BASE_DIR, gen_idx, BASE_DNN_INPUT_EXT);
-      snprintf(str_shift, 15, "%d", gen_idx * (ONESEC_CSV_CHUNK_NUM / 2));
-      snprintf(str_len, 15, "%d", ONESEC_CSV_CHUNK_NUM);
+      snprintf(str_shift, 15, "%d", gen_idx * (DNN_INPUT_CHUNK_NUM / 2));
+      snprintf(str_len, 15, "%d", DNN_INPUT_CHUNK_NUM);
       util_wav_to_csv_main(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
     }
 

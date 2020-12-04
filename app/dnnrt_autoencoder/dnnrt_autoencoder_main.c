@@ -71,40 +71,7 @@ static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
   printf("Wave Normalization (1.0/255.0): skipped\n");
   fflush(stdout);
 }
-#if 0
-static void *memtile_alloc(mpshm_t *pshm, int size)
-{
-  int ret;
-  int alloc_size = CXD5602_SINGLE_TILE_SIZE;
-  void *shm_vbuf;
-  void *shm_phead;
-  void *shm_ptail;
 
-  if (size > alloc_size)
-  {
-    printf("ERROR: Too Large alloc unit for memtile_alloc (%dbyte > MEMTILE(%dbyte))\n", size, alloc_size);
-    return NULL;
-  }
-
-  ret = mpshm_init(pshm, 0, size);
-  if (ret != 0) {
-    printf("ERROR: mpshm_init/memtile_alloc(%d)\n", ret);
-    return NULL;
-  }
-  shm_vbuf = mpshm_attach(pshm, 0);
-  shm_phead = (void *)mpshm_virt2phys(pshm, shm_vbuf);
-  shm_ptail = (void *)mpshm_virt2phys(pshm, (void *)((uint32_t)shm_vbuf + (alloc_size - 1)));
-  printf("ALLOC: [phys:0x%08x-0x%08x][virt:0x%08x, size %dbyte] for model\n", shm_phead, shm_ptail, shm_vbuf, alloc_size);
-  fflush(stdout);
-  return shm_phead;
-}
-
-static void memtile_free(mpshm_t *pshm)
-{
-  mpshm_detach(pshm);
-  mpshm_destroy(pshm);
-}
-#endif
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -176,6 +143,19 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
     {
       printf("dnn_runtime_initialize() failed due to %d\n", ret);
       goto rt_error;
+    }
+
+  /* Start-B+: get Input Types */
+  int input_num;
+  int input_idx;
+  int input_cnt;
+  int input_ndim;
+  input_num = dnn_runtime_input_num(&rt);
+  for (input_idx = 0; input_idx < input_num; input_idx++) 
+    {
+      input_cnt = dnn_runtime_input_size(&rt, input_idx);
+      input_ndim = dnn_runtime_input_ndim(&rt, input_idx);
+      printf("input[%d] = 0x%08x, cnt=%d dmis=%d)\n", input_idx, &inputs[input_idx], input_cnt, input_ndim);
     }
 
   /* Step-C: perform inference after feeding inputs */
