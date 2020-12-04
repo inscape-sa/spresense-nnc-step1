@@ -184,7 +184,7 @@ int util_wav_to_csv_main(int argc, char *argv[])
       if (wavmax < power) {
         wavmax = power;
       }
-      fprintf(dstfp, "%d,\n", power);
+      fprintf(dstfp, "%d\n", power);
     }
     outnum += ret;
     remain_num -= ret;

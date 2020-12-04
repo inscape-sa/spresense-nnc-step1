@@ -1,0 +1,67 @@
+2020-12-04 13:47:48,581 Training process is started.
+python "C:\neural_network_console\libs\Python\Lib\site-packages\nnabla\utils\cli\cli.py" train
+	-c "C:\msys64\home\shino\spresense-nnc-step1\app\__dnn_dataset\audio_recognition\dnn_model\wav_keyboard_sound.files\20201204_134748\net.nntxt"
+	-o "C:\msys64\home\shino\spresense-nnc-step1\app\__dnn_dataset\audio_recognition\dnn_model\wav_keyboard_sound.files\20201204_134748"
+2020-12-04 13:47:49,599 [nnabla]: Using context "Context(backend=['cpu:float'], array_class='CpuCachedArray', device_id='')"
+2020-12-04 13:47:49,638 [nnabla]: Train with contexts ['cpu']
+2020-12-04 13:47:49,694 [nnabla]: Training epoch 1 of 150 begin
+2020-12-04 13:49:09,222 [nnabla]: epoch 1 of 150 cost=5.776916  {train_error=1.922651, valid_error=1.963188} time=(52.9s /7938.8s) average load:{cpu:100.5%}
+2020-12-04 13:50:27,578 [nnabla]: epoch 2 of 150 cost=1.869320  {train_error=1.723771, valid_error=1.751313} time=(133.1s /9980.3s) average load:{cpu:100.0%}
+2020-12-04 13:51:45,888 [nnabla]: epoch 3 of 150 cost=1.674814  {train_error=1.599276, valid_error=1.436656} time=(211.3s /10567.3s) average load:{cpu:99.8%}
+2020-12-04 13:53:04,290 [nnabla]: epoch 4 of 150 cost=1.591048  {train_error=1.506745, valid_error=1.572895} time=(289.7s /10864.5s) average load:{cpu:100.1%}
+2020-12-04 13:54:22,706 [nnabla]: epoch 5 of 150 cost=1.492169  {train_error=1.457126, valid_error=1.408441} time=(368.2s /11044.5s) average load:{cpu:99.9%}
+2020-12-04 13:55:16,123 [nnabla]: epoch 6 of 150 cost=1.479050  time=(446.4s /11160.7s) average load:{cpu:99.9%}
+2020-12-04 13:56:09,620 [nnabla]: epoch 7 of 150 cost=1.398413  time=(499.9s /10712.3s) average load:{cpu:99.9%}
+2020-12-04 13:57:03,231 [nnabla]: epoch 8 of 150 cost=1.368687  time=(553.5s /10378.7s) average load:{cpu:100.0%}
+2020-12-04 13:57:56,783 [nnabla]: epoch 9 of 150 cost=1.304231  time=(607.1s /10118.1s) average load:{cpu:99.7%}
+2020-12-04 13:59:15,348 [nnabla]: epoch 10 of 150 cost=1.226905  {train_error=1.126269, valid_error=1.188523} time=(660.7s /9910.7s) average load:{cpu:100.0%}
+2020-12-04 14:00:08,769 [nnabla]: epoch 11 of 150 cost=1.131209  time=(739.1s /10078.3s) average load:{cpu:99.9%}
+2020-12-04 14:01:02,250 [nnabla]: epoch 12 of 150 cost=1.008272  time=(792.6s /9906.9s) average load:{cpu:99.9%}
+2020-12-04 14:01:55,717 [nnabla]: epoch 13 of 150 cost=0.814491  time=(846.0s /9761.8s) average load:{cpu:99.9%}
+2020-12-04 14:02:49,283 [nnabla]: epoch 14 of 150 cost=0.644839  time=(899.6s /9638.3s) average load:{cpu:100.0%}
+2020-12-04 14:03:42,861 [nnabla]: epoch 15 of 150 cost=0.529061  time=(953.2s /9531.7s) average load:{cpu:99.9%}
+2020-12-04 14:04:36,362 [nnabla]: epoch 16 of 150 cost=0.457504  time=(1006.7s /9437.5s) average load:{cpu:99.7%}
+2020-12-04 14:05:29,888 [nnabla]: epoch 17 of 150 cost=0.665622  time=(1060.2s /9354.6s) average load:{cpu:100.1%}
+2020-12-04 14:06:23,330 [nnabla]: epoch 18 of 150 cost=0.445714  time=(1113.6s /9280.1s) average load:{cpu:100.0%}
+2020-12-04 14:07:16,812 [nnabla]: epoch 19 of 150 cost=0.331566  time=(1167.1s /9214.1s) average load:{cpu:100.1%}
+2020-12-04 14:08:35,363 [nnabla]: epoch 20 of 150 cost=0.274905  {train_error=0.224890, valid_error=0.223948} time=(1220.8s /9156.2s) average load:{cpu:99.9%}
+2020-12-04 14:09:28,908 [nnabla]: epoch 21 of 150 cost=0.227802  time=(1299.2s /9280.0s) average load:{cpu:99.9%}
+2020-12-04 14:10:22,558 [nnabla]: epoch 22 of 150 cost=0.193561  time=(1352.9s /9224.1s) average load:{cpu:99.8%}
+2020-12-04 14:11:16,517 [nnabla]: epoch 23 of 150 cost=0.156047  time=(1406.8s /9174.9s) average load:{cpu:100.1%}
+2020-12-04 14:12:10,434 [nnabla]: epoch 24 of 150 cost=0.104911  time=(1460.7s /9129.6s) average load:{cpu:100.0%}
+2020-12-04 14:13:05,572 [nnabla]: epoch 25 of 150 cost=0.054357  time=(1515.8s /9095.0s) average load:{cpu:100.0%}
+2020-12-04 14:13:57,888 [nnabla]: epoch 26 of 150 cost=0.043066  time=(1568.2s /9047.3s) average load:{cpu:99.9%}
+2020-12-04 14:14:49,980 [nnabla]: epoch 27 of 150 cost=0.038261  time=(1620.3s /9001.6s) average load:{cpu:100.1%}
+2020-12-04 14:15:42,913 [nnabla]: epoch 28 of 150 cost=0.030121  time=(1673.2s /8963.7s) average load:{cpu:100.1%}
+2020-12-04 14:16:35,028 [nnabla]: epoch 29 of 150 cost=0.014809  time=(1725.3s /8924.0s) average load:{cpu:99.9%}
+2020-12-04 14:17:49,867 [nnabla]: epoch 30 of 150 cost=0.063725  {train_error=0.574316, valid_error=0.431525} time=(1777.1s /8885.4s) average load:{cpu:100.0%}
+2020-12-04 14:18:40,382 [nnabla]: epoch 31 of 150 cost=0.925434  time=(1850.7s /8954.9s) average load:{cpu:100.1%}
+2020-12-04 14:19:29,788 [nnabla]: epoch 32 of 150 cost=0.190184  time=(1900.1s /8906.7s) average load:{cpu:100.1%}
+2020-12-04 14:20:19,211 [nnabla]: epoch 33 of 150 cost=0.075182  time=(1949.5s /8861.4s) average load:{cpu:100.1%}
+2020-12-04 14:21:08,570 [nnabla]: epoch 34 of 150 cost=0.049762  time=(1998.9s /8818.6s) average load:{cpu:100.0%}
+2020-12-04 14:21:57,515 [nnabla]: epoch 35 of 150 cost=0.031133  time=(2047.8s /8776.4s) average load:{cpu:100.1%}
+2020-12-04 14:22:46,046 [nnabla]: epoch 36 of 150 cost=0.024323  time=(2096.4s /8734.8s) average load:{cpu:100.1%}
+2020-12-04 14:23:34,420 [nnabla]: epoch 37 of 150 cost=0.019990  time=(2144.7s /8694.8s) average load:{cpu:100.2%}
+2020-12-04 14:24:22,634 [nnabla]: epoch 38 of 150 cost=0.012505  time=(2192.9s /8656.3s) average load:{cpu:100.2%}
+2020-12-04 14:25:10,975 [nnabla]: epoch 39 of 150 cost=0.016122  time=(2241.3s /8620.3s) average load:{cpu:100.1%}
+2020-12-04 14:26:21,937 [nnabla]: epoch 40 of 150 cost=0.011514  {train_error=0.005986, valid_error=0.011077} time=(2289.6s /8586.0s) average load:{cpu:100.2%}
+2020-12-04 14:27:10,310 [nnabla]: epoch 41 of 150 cost=0.008162  time=(2360.6s /8636.3s) average load:{cpu:100.1%}
+2020-12-04 14:27:58,750 [nnabla]: epoch 42 of 150 cost=0.007020  time=(2409.1s /8603.8s) average load:{cpu:100.2%}
+2020-12-04 14:28:47,080 [nnabla]: epoch 43 of 150 cost=0.005808  time=(2457.4s /8572.3s) average load:{cpu:100.1%}
+2020-12-04 14:29:35,574 [nnabla]: epoch 44 of 150 cost=0.006427  time=(2505.9s /8542.8s) average load:{cpu:100.1%}
+2020-12-04 14:30:24,217 [nnabla]: epoch 45 of 150 cost=0.006787  time=(2554.5s /8514.9s) average load:{cpu:100.0%}
+2020-12-04 14:31:12,976 [nnabla]: epoch 46 of 150 cost=0.004543  time=(2603.3s /8489.0s) average load:{cpu:100.1%}
+2020-12-04 14:32:01,682 [nnabla]: epoch 47 of 150 cost=0.004714  time=(2652.0s /8463.8s) average load:{cpu:100.0%}
+2020-12-04 14:32:50,722 [nnabla]: epoch 48 of 150 cost=0.004737  time=(2701.0s /8440.7s) average load:{cpu:100.2%}
+2020-12-04 14:33:39,933 [nnabla]: epoch 49 of 150 cost=0.004668  time=(2750.2s /8419.0s) average load:{cpu:100.2%}
+2020-12-04 14:34:52,574 [nnabla]: epoch 50 of 150 cost=0.002748  {train_error=0.001228, valid_error=0.000966} time=(2800.2s /8400.7s) average load:{cpu:100.2%}
+2020-12-04 14:35:41,586 [nnabla]: epoch 51 of 150 cost=0.002337  time=(2871.9s /8446.7s) average load:{cpu:100.2%}
+2020-12-04 14:36:31,204 [nnabla]: epoch 52 of 150 cost=0.002298  time=(2921.5s /8427.4s) average load:{cpu:100.1%}
+2020-12-04 14:37:20,509 [nnabla]: epoch 53 of 150 cost=0.003620  time=(2970.8s /8407.9s) average load:{cpu:100.0%}
+2020-12-04 14:38:07,812 [nnabla]: epoch 54 of 150 cost=0.005698  time=(3018.1s /8383.7s) average load:{cpu:100.2%}
+2020-12-04 14:38:56,732 [nnabla]: epoch 55 of 150 cost=0.004192  time=(3067.0s /8364.6s) average load:{cpu:100.2%}
+2020-12-04 14:39:45,182 [nnabla]: epoch 56 of 150 cost=0.001881  time=(3115.5s /8345.1s) average load:{cpu:100.0%}
+2020-12-04 14:40:33,169 [nnabla]: epoch 57 of 150 cost=0.001970  time=(3163.5s /8324.9s) average load:{cpu:100.1%}
+2020-12-04 14:41:21,802 [nnabla]: epoch 58 of 150 cost=0.002934  time=(3212.1s /8307.2s) average load:{cpu:100.1%}
+2020-12-04 14:42:08,533 [nnabla]: epoch 59 of 150 cost=0.002529  time=(3258.8s /8285.2s) average load:{cpu:100.1%}
+2020-12-04 14:43:17,121 [nnabla]: epoch 60 of 150 cost=0.001947  {train_error=0.000817, valid_error=0.000687} time=(3305.9s /8264.8s) average load:{cpu:100.2%}
