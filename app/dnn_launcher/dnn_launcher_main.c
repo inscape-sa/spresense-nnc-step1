@@ -25,6 +25,7 @@
 #define REC_WAV_SEC           (60)
 #define REC_WAV_SEC_TMP       (5)
 #define GEN_WAV_NUM           (REC_WAV_SEC * (ONESEC_CSV_CHUNK_NUM / DNN_INPUT_CHUNK_NUM) * 2)
+#define DNN_NNB_PATH          "/mnt/sd0/audiocnn/model.nnb"
 
 /****************************************************************************
  * Private Function Prototypes
@@ -47,7 +48,7 @@ typedef enum exec_mode_type_e
  * Private Data
  ****************************************************************************/
 static char filepath_rec[] = "/mnt/sd0/REC/tmp.wav"; 
-static char filename_recognition[] = "recognition";
+static char filename_recog[] = "/mnt/sd0/REC/recog.csv";
 static char filepath_dnnsrc[MAX_PATH_LENGTH];
 static char str_shift[16];
 static char str_len[16];
@@ -65,6 +66,12 @@ static char* util_wav_to_csv_argv[] = {
   filepath_dnnsrc, 
   str_shift,
   str_len
+  };
+
+static char *dnnrt_audiocnn_argv[] = {
+  "dnnrt_audiocnn_main",
+  DNN_NNB_PATH,
+  filename_recog,
   };
 
 /****************************************************************************
@@ -117,13 +124,13 @@ int dnn_launcher_main(int argc, char *argv[])
 
     /* Recog.Mode - Phase.2 [convert to CSV from WAV] */
     filepath_dnnsrc[MAX_PATH_LENGTH - 1] = '\0';
-    snprintf(filepath_dnnsrc, MAX_PATH_LENGTH - 1, "%s/%s.%s", BASE_DIR, filename_recognition, BASE_DNN_INPUT_EXT);
+    snprintf(filepath_dnnsrc, MAX_PATH_LENGTH - 1, "%s", filename_recog);
     snprintf(str_shift, 15, "%d", 0);
-    snprintf(str_len, 15, "%d", ONESEC_CSV_CHUNK_NUM);
+    snprintf(str_len, 15, "%d", DNN_INPUT_CHUNK_NUM);
     util_wav_to_csv_main(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
 
     /* Recog.Mode - Phase.3 [Recognition] */
-    dnnrt_autoencoder_main(argc, argv);
+    dnnrt_audiocnn_main(SET_ARGC(dnnrt_audiocnn_argv), dnnrt_audiocnn_argv);
 
   } else {
     printf("INFO: usage: dnn_launcher [option, \"gen\"=gen_learnig_data mode, \"run\"=recognition mode]\n");
