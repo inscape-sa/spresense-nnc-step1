@@ -7,7 +7,7 @@ APPNAME =
 PRIORITY =
 
 # Application stack memory size (Default: 2048)
-STACKSIZE = 4096
+STACKSIZE = 2048
 
 # Main source code
 MAINSRC =

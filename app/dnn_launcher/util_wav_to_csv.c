@@ -12,7 +12,8 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/stat.h>
-#include "../util_misc/util_misc.h"
+
+#include "./util_wav_to_csv.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -73,7 +74,6 @@ static int check_wav_header_and_get_entries(FILE *srcfp)
     mainret = -EINVAL;
     goto err_fread_wav_header;
   }
-  // dump_char((uint8_t *)&s_wav_header, sizeof(UTIL_WAVH));
   printf("INFO:fmtcode=%d, ch=%d, birrate=%d, sampling-rate=%fkHz payload-size=%dbyte(%08x)\n",
     s_wav_header.format,
     s_wav_header.channel,
@@ -102,7 +102,7 @@ err_fread_wav_header:
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
-int util_wav_to_csv_main(int argc, char *argv[])
+int util_wav_to_csv(int argc, char *argv[])
 {
   int mainret = -EINVAL;
 

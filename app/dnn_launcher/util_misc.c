@@ -113,8 +113,3 @@ void dump_float(float *buf, int num)
   printf("\n\n");
   fflush(stdout);
 }
-
-int util_misc_main(int argc, char *argv[])
-{
-  return 0;
-}

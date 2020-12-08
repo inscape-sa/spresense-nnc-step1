@@ -14,11 +14,11 @@
 #include <asmp/mpshm.h>
 #include <asmp/mpmq.h>
 #include <asmp/mpmutex.h>
+#include "./dnnrt_audiocnn.h"
 
-#include "loader_large_nnb.h"
-#include "csv_util.h"
-
-#include "../util_misc/util_misc.h"
+#include "./util_misc.h"
+#include "./csv_util.h"
+#include "./loader_large_nnb.h"
 
 /****************************************************************************
  * Type Definition
@@ -28,24 +28,22 @@ typedef struct
   char *nnb_path;
   char *csv_path;
   bool skip_norm;
-} autoencoder_setting_t;
+} audiocnn_setting_t;
 
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
-#define DNN_WAV_PATH    "/mnt/sd0/autoencoder/0.csv"
-#define DNN_NNB_PATH    "/mnt/sd0/autoencoder/model.nnb"
-#define INPUT_WAVE_LEN  (128)
+#define DNN_WAV_PATH    "/mnt/sd0/audiocnn/0.csv"
+#define DNN_NNB_PATH    "/mnt/sd0/audiocnn/model.nnb"
+#define INPUT_WAVE_LEN  ((48 * 1024) / 2) /* 48kHz, 0,5sec */
 #define INPUT_WAVE_SIZE (INPUT_WAVE_LEN * (sizeof(float)))
-#define OUTPUT_WAVE_LEN  (128)
-#define OUTPUT_WAVE_SIZE (OUTPUT_WAVE_LEN * (sizeof(float)))
 #define ALLOC_UNIT      (CXD5602_SINGLE_TILE_SIZE)
 
 
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
-static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
+static void parse_args(int argc, char *argv[], audiocnn_setting_t * setting)
 {
   int idx;
   setting->skip_norm = false;
@@ -62,20 +60,52 @@ static void parse_args(int argc, char *argv[], autoencoder_setting_t * setting)
     setting->csv_path = argv[2];
   } else {
     /* nop */
-    printf("usage: dnnrt_autoencoder [path_model] [path_wav]");
+    printf("usage: dnnrt_audiocnn [path_model] [path_wav]");
   }
 
-  /* print autoencoder_setting_t */
+  /* print audiocnn_setting_t */
   printf("Load nnb file: %s\n", setting->nnb_path);
   printf("Load wave file: %s\n", setting->csv_path);
-  printf("Wave Normalization (1.0/255.0): skipped\n");
   fflush(stdout);
+}
+
+/* get Input Types */
+static void print_input_format(dnn_runtime_t *prt)
+{ 
+  int num;
+  int idx;
+  int cnt;
+  int ndim;
+  num = dnn_runtime_input_num(prt);
+  for (idx = 0; idx < num; idx++) 
+    {
+      cnt = dnn_runtime_input_size(prt, idx);
+      ndim = dnn_runtime_input_ndim(prt, idx);
+      printf("input[%d] = cnt=%d dmis=%d)\n", idx, cnt, ndim);
+    }
+}
+
+/* get Output Types */
+static void print_output_format(dnn_runtime_t *prt)
+{ 
+  
+  int num;
+  int idx;
+  int cnt;
+  int ndim;
+  num = dnn_runtime_output_num(prt);
+  for (idx = 0; idx < num; idx++) 
+    {
+      cnt = dnn_runtime_output_size(prt, idx);
+      ndim = dnn_runtime_output_ndim(prt, idx);
+      printf("output[%d] = cnt=%d dmis=%d)\n", idx, cnt, ndim);
+    }
 }
 
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
-int dnnrt_autoencoder_main(int argc, char *argv[])
+int dnnrt_audiocnn(int argc, char *argv[])
 {
   int ret = 0;
   mpshm_t shm_model;
@@ -83,7 +113,7 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
   dnn_runtime_t rt;
   dnn_config_t config = {.cpu_num = 1 };
   nn_network_t *network;
-  autoencoder_setting_t setting = { 0 };
+  audiocnn_setting_t setting = { 0 };
   void *inputs[1];
   float *s_wave_buffer;
   void *s_model_buffer;
@@ -103,15 +133,14 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
     ret = -errno;
     goto err_input_alloc;
   }
-  s_wave_buffer = (void *)(((uint32_t)s_model_buffer) + 96 * 1024);
   printf("ADDR:%08x: for s_wave_buffer\n", s_wave_buffer);
   ret = csv_load(setting.csv_path, 1.0f, s_wave_buffer, INPUT_WAVE_LEN);
   if (ret != 0) {
     printf("ERROR occur in csv_load(ret=%d)\n", ret);
     goto load_error;
   }
-  dump_float((float *)s_wave_buffer, INPUT_WAVE_LEN);
   inputs[0] = (void *)s_wave_buffer;
+  printf("INFO: input buffer on 0x%08x, size = %dbyte\n", inputs[0], INPUT_WAVE_LEN * sizeof(float));
 
   printf("----load_nnb_network----\n");
   fflush(stdout);
@@ -146,17 +175,7 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
     }
 
   /* Start-B+: get Input Types */
-  int input_num;
-  int input_idx;
-  int input_cnt;
-  int input_ndim;
-  input_num = dnn_runtime_input_num(&rt);
-  for (input_idx = 0; input_idx < input_num; input_idx++) 
-    {
-      input_cnt = dnn_runtime_input_size(&rt, input_idx);
-      input_ndim = dnn_runtime_input_ndim(&rt, input_idx);
-      printf("input[%d] = 0x%08x, cnt=%d dmis=%d)\n", input_idx, &inputs[input_idx], input_cnt, input_ndim);
-    }
+  print_input_format(&rt);
 
   /* Step-C: perform inference after feeding inputs */
   printf("----STEP:C----\n");
@@ -173,6 +192,9 @@ int dnnrt_autoencoder_main(int argc, char *argv[])
       printf("dnn_runtime_forward() failed due to %d\n", ret);
       goto fin;
     }
+
+  /* Start-D-: get Output Types */
+  print_output_format(&rt);
 
   /* Step-D: obtain the output from this dnn_runtime_t */
   printf("----STEP:D----\n");

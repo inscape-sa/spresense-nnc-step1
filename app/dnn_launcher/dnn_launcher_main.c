@@ -12,6 +12,7 @@
 #include <time.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include "./dnnrt_audiocnn.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -41,6 +42,7 @@ typedef enum exec_mode_type_e
 {
   EXEC_MODE_DATA_GEN = 0,
   EXEC_MODE_RECONGNITION,
+  EXEC_MODE_DNNONLY,
   EXEC_MODE_INVAL
 } EXEC_MODE;
 
@@ -91,6 +93,8 @@ int dnn_launcher_main(int argc, char *argv[])
       exec_mode = EXEC_MODE_DATA_GEN;
     } else if (strncmp(argv[1], "run", 4) == 0) {
       exec_mode = EXEC_MODE_RECONGNITION;
+    } else if (strncmp(argv[1], "dnn", 4) == 0) {
+      exec_mode = EXEC_MODE_DNNONLY;
     } else {
       /* NOP */
     }
@@ -111,7 +115,7 @@ int dnn_launcher_main(int argc, char *argv[])
       snprintf(filepath_dnnsrc, MAX_PATH_LENGTH - 1, "%s/%d.%s", BASE_DIR, gen_idx, BASE_DNN_INPUT_EXT);
       snprintf(str_shift, 15, "%d", gen_idx * (DNN_INPUT_CHUNK_NUM / 2));
       snprintf(str_len, 15, "%d", DNN_INPUT_CHUNK_NUM);
-      util_wav_to_csv_main(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
+      util_wav_to_csv(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
     }
 
   } else if (exec_mode == EXEC_MODE_RECONGNITION) {
@@ -127,11 +131,17 @@ int dnn_launcher_main(int argc, char *argv[])
     snprintf(filepath_dnnsrc, MAX_PATH_LENGTH - 1, "%s", filename_recog);
     snprintf(str_shift, 15, "%d", 0);
     snprintf(str_len, 15, "%d", DNN_INPUT_CHUNK_NUM);
-    util_wav_to_csv_main(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
+    util_wav_to_csv(SET_ARGC(util_wav_to_csv_argv), util_wav_to_csv_argv);
 
     /* Recog.Mode - Phase.3 [Recognition] */
-    dnnrt_audiocnn_main(SET_ARGC(dnnrt_audiocnn_argv), dnnrt_audiocnn_argv);
+    dnnrt_audiocnn(SET_ARGC(dnnrt_audiocnn_argv), dnnrt_audiocnn_argv);
 
+  } else if (exec_mode == EXEC_MODE_DNNONLY) {
+    /*****************************************************/
+    /** ONLY EXEC AUDIOCNN */
+    /*****************************************************/
+    /* Recog.Mode - Phase.1 [Recognition] */
+    dnnrt_audiocnn(argc, argv);
   } else {
     printf("INFO: usage: dnn_launcher [option, \"gen\"=gen_learnig_data mode, \"run\"=recognition mode]\n");
     return -EINVAL;
