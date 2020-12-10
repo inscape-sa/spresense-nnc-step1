@@ -55,9 +55,10 @@ nn_network_t *load_nnb_network(const char *nnb_path, void *target)
   file = fopen(nnb_path, "r");
   if (file == NULL)
     {
+      printf("ERROR: fopen is failed in load_nnb_network\n");
       goto file_open_err;
     }
-  printf("fopen = OK\n");
+  
   fflush(stdout);
   /* get size of nnb_file in units of bytes */
   ret = get_nnb_size(nnb_path, &exp_data_bsize);
@@ -65,17 +66,17 @@ nn_network_t *load_nnb_network(const char *nnb_path, void *target)
     {
       goto get_size_error;
     }
-  printf("get_nnb_size = %d\n", exp_data_bsize);
+  printf("INFO: NNB size is %dbyte\n", exp_data_bsize);
   fflush(stdout);
 
   act_data_bsize = fread(network, 1, exp_data_bsize, file);
   if (exp_data_bsize != act_data_bsize)
     {
+      printf("ERROR: fread is failed in load_nnb_network (req=%dbyte, result=%dbyte)\n", exp_data_bsize, act_data_bsize);
       free(network);
       network = NULL;
     }
     
-  printf("fread = OK\n");
   fflush(stdout);
 
 get_size_error:

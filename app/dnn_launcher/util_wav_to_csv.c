@@ -18,7 +18,8 @@
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
-#define NUM_ENTRY_BUF 512
+#define SET_DOWNSAMPLING_RATE   (12)
+#define NUM_ENTRY_BUF           (SET_DOWNSAMPLING_RATE * 40)
 
 /****************************************************************************
  * Private Type Declarations
@@ -74,7 +75,7 @@ static int check_wav_header_and_get_entries(FILE *srcfp)
     mainret = -EINVAL;
     goto err_fread_wav_header;
   }
-  printf("INFO:fmtcode=%d, ch=%d, birrate=%d, sampling-rate=%fkHz payload-size=%dbyte(%08x)\n",
+  printf("INFO: fmtcode=%d, ch=%d, birrate=%d, sampling-rate=%fkHz payload-size=%dbyte(%08x)\n",
     s_wav_header.format,
     s_wav_header.channel,
     s_wav_header.bit,
@@ -99,6 +100,31 @@ err_fread_wav_header:
   return mainret;
 }
 
+static int downsampling_and_output_to_file(signed short *pbuf, 
+  const int read_entries, const int downsampling_rate, FILE *dstfp)
+{
+  int sigmaidx;
+  int result_entries = read_entries / downsampling_rate;
+  int outidx;
+  int bufidx;
+  signed int power;
+
+  bufidx = 0;
+  for (outidx = 0; outidx < result_entries; outidx++)
+    {
+      power = 0;
+      for (sigmaidx = 0; sigmaidx < downsampling_rate; sigmaidx++, bufidx++)
+      {
+        //printf("[%d-%d]%d\n", outidx, sigmaidx, pbuf[bufidx]);
+        power += (signed int)(pbuf[bufidx]);
+      }
+      //printf("-->[%d]%d\n", outidx, power);
+      fprintf(dstfp, "%d\n", power);
+      fflush(stdout);
+    }
+  return result_entries;
+}
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -113,13 +139,16 @@ int util_wav_to_csv(int argc, char *argv[])
   FILE *dstfp;
   int src_record_num;
   signed short buf[NUM_ENTRY_BUF];
-  signed short wavmin = INT16_MAX;
-  signed short wavmax = INT16_MIN;
-  int outidx;
-  int outnum;
+  //signed int wavmin = INT32_MAX;
+  //signed int wavmax = INT32_MIN;
+  int out_num;
+  int req_num;
   int remain_num;
   int conv_num = -1;
   int skip_num = 0;
+  int downsampling_rate = SET_DOWNSAMPLING_RATE;
+  int converted_num;
+  int read_entries;
 
   if (argc < 3) {
     printf("ERROR : USAGE : util_wav_to_csv_main [srcfile.wav] [dstfile.csv]");
@@ -133,7 +162,8 @@ int util_wav_to_csv(int argc, char *argv[])
     skip_num = atoi(argv[3]);
     conv_num = atoi(argv[4]);
   }
-  printf("Convert %s -> %s (skip=%d, conv=%d)\n", srcpath, dstpath, skip_num, conv_num);
+  printf("INFO: from %s[+%d] to %s\n", srcpath, skip_num, dstpath);
+  printf("INFO: conv=%d, downsampling-rate=1/%d\n", conv_num, downsampling_rate);
   
   srcfp = fopen(srcpath, "r");
   if (srcfp == NULL) {
@@ -150,7 +180,6 @@ int util_wav_to_csv(int argc, char *argv[])
   }
 
   src_record_num = check_wav_header_and_get_entries(srcfp);
-  printf("INFO: src has %d records\n", src_record_num);
   if (src_record_num <= 0) {
     printf("ERROR: check_wav_header_and_get_entries(%d)\n", src_record_num);
     mainret = -EINVAL;
@@ -167,31 +196,20 @@ int util_wav_to_csv(int argc, char *argv[])
     goto err_src_fmt;
   }
 
-  outnum = 0;
+  out_num = 0;
   remain_num = conv_num;
-  int req_num;
-  if (skip_num > 0) {
-    fseek(srcfp, skip_num * sizeof(buf[0]), SEEK_CUR);
-  }
+  fseek(srcfp, skip_num * sizeof(buf[0]), SEEK_CUR);
+  
   do {
     req_num = (remain_num > NUM_ENTRY_BUF)? NUM_ENTRY_BUF : remain_num;
-    ret = fread(buf, sizeof(signed short), req_num, srcfp);
-    for (outidx = 0; outidx < ret; outidx++) {
-      register signed short power = buf[outidx];
-      if (wavmin > power) {
-        wavmin = power;
-      }
-      if (wavmax < power) {
-        wavmax = power;
-      }
-      fprintf(dstfp, "%d\n", power);
-    }
-    outnum += ret;
-    remain_num -= ret;
-  } while ((ret >= req_num) && (remain_num > 0));
-  printf("INFO: convert %d entries. (skip=%d, max=%d, min=%d)\n", outnum, skip_num, wavmax, wavmin);
+    read_entries = fread(buf, sizeof(signed short), req_num, srcfp);
+    converted_num = downsampling_and_output_to_file(buf, read_entries, downsampling_rate, dstfp);
+    out_num += converted_num;
+    remain_num -= read_entries;
+  } while ((read_entries >= req_num) && (remain_num > 0));
+  printf("INFO: generated CSV has %d entries (downsampling-rate=1/%d)\n", out_num, downsampling_rate); 
 
-  ret = 0;
+  mainret = EXIT_SUCCESS;
 err_src_fmt:
   fclose(dstfp);
 err_fopen_dst:

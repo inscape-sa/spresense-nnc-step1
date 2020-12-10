@@ -143,7 +143,12 @@ int dnn_launcher_main(int argc, char *argv[])
     /* Recog.Mode - Phase.1 [Recognition] */
     dnnrt_audiocnn(argc, argv);
   } else {
-    printf("INFO: usage: dnn_launcher [option, \"gen\"=gen_learnig_data mode, \"run\"=recognition mode]\n");
+    printf("INFO: usage: dnn_launcher [option]\n");
+    printf("[option] are\n"
+      "    \"gen\"=gen_learnig_data mode\n"
+      "    \"run\"=recognition mode\n"
+      "    \"dnn\"=start only recognizer\n"
+      );
     return -EINVAL;
   }
   return 0;

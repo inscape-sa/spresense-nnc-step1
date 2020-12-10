@@ -1,0 +1,11 @@
+2020-12-10 08:17:26,976 Evaluation process is started.
+python "C:\neural_network_console\libs\Python\Lib\site-packages\nnabla\utils\cli\cli.py" forward
+	-c "C:\msys64\home\shino\spresense-nnc-step1\app\__dnn_dataset\audio_recognition\dnn_model\wav_keyboard_sound.files\20201210_071817\results.nnp"
+	-d "C:\msys64\home\shino\spresense-nnc-step1\app\__dnn_dataset\audio_recognition\48kHzSampling\sound48kHz_Evaluate.csv"
+	-o "C:\msys64\home\shino\spresense-nnc-step1\app\__dnn_dataset\audio_recognition\dnn_model\wav_keyboard_sound.files\20201210_071817"
+	--replace_path
+2020-12-10 08:17:27,878 [nnabla]: Using context "Context(backend=['cpu:float'], array_class='CpuCachedArray', device_id='')"
+2020-12-10 08:17:34,398 [nnabla]: data 128 / 140
+2020-12-10 08:17:40,641 [nnabla]: data 140 / 140
+2020-12-10 08:17:40,641 [nnabla]: Forward Completed.
+NNabla command line interface (Version:1.11.0.console_day10r1, Build:200925045104)

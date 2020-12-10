@@ -35,7 +35,8 @@ typedef struct
  ****************************************************************************/
 #define DNN_WAV_PATH    "/mnt/sd0/audiocnn/0.csv"
 #define DNN_NNB_PATH    "/mnt/sd0/audiocnn/model.nnb"
-#define INPUT_WAVE_LEN  ((48 * 1024) / 2) /* 48kHz, 0,5sec */
+//#define INPUT_WAVE_LEN  ((48 * 1024) / 2) /* 48kHz, 0,5sec */
+#define INPUT_WAVE_LEN  ((4 * 1024) / 2) /* 4kHz, 0,5sec */
 #define INPUT_WAVE_SIZE (INPUT_WAVE_LEN * (sizeof(float)))
 #define ALLOC_UNIT      (CXD5602_SINGLE_TILE_SIZE)
 
@@ -81,7 +82,7 @@ static void print_input_format(dnn_runtime_t *prt)
     {
       cnt = dnn_runtime_input_size(prt, idx);
       ndim = dnn_runtime_input_ndim(prt, idx);
-      printf("input[%d] = cnt=%d dmis=%d)\n", idx, cnt, ndim);
+      printf("input[%d] reqiore cnt=%d dmis=%d.\n", idx, cnt, ndim);
     }
 }
 
@@ -98,7 +99,7 @@ static void print_output_format(dnn_runtime_t *prt)
     {
       cnt = dnn_runtime_output_size(prt, idx);
       ndim = dnn_runtime_output_ndim(prt, idx);
-      printf("output[%d] = cnt=%d dmis=%d)\n", idx, cnt, ndim);
+      printf("output[%d] is constructed from cnt=%d dmis=%d)\n", idx, cnt, ndim);
     }
 }
 
@@ -122,27 +123,30 @@ int dnnrt_audiocnn(int argc, char *argv[])
 
   parse_args(argc, argv, &setting);
 
-  s_model_buffer = memtile_alloc(&shm_model, ALLOC_UNIT);
-  if (s_model_buffer == NULL) {
-    ret = -errno;
-    goto err_model_alloc;
-  }
-  printf("ADDR:%08x: for s_model_buffer\n", s_model_buffer);
   s_wave_buffer = memtile_alloc(&shm_input, ALLOC_UNIT);
   if (s_wave_buffer == NULL) {
     ret = -errno;
     goto err_input_alloc;
   }
-  printf("ADDR:%08x: for s_wave_buffer\n", s_wave_buffer);
+  printf("ADDR:%08x: for s_wave_buffer (%dbyte)\n", s_wave_buffer, INPUT_WAVE_LEN * sizeof(float));
+  s_model_buffer = (void *)(((uint32_t)(s_wave_buffer)) + INPUT_WAVE_LEN * sizeof(float));
+#if 0  
+  s_model_buffer = memtile_alloc(&shm_model, ALLOC_UNIT);
+  if (s_model_buffer == NULL) {
+    ret = -errno;
+    goto err_model_alloc;
+  }
+#endif
+  printf("ADDR:%08x: for s_model_buffer (%byte)\n", s_model_buffer, CXD5602_SINGLE_TILE_SIZE - (INPUT_WAVE_LEN * sizeof(float)));
+  printf("----load WAVE DATA as input data ----\n");
   ret = csv_load(setting.csv_path, 1.0f, s_wave_buffer, INPUT_WAVE_LEN);
   if (ret != 0) {
     printf("ERROR occur in csv_load(ret=%d)\n", ret);
     goto load_error;
   }
   inputs[0] = (void *)s_wave_buffer;
-  printf("INFO: input buffer on 0x%08x, size = %dbyte\n", inputs[0], INPUT_WAVE_LEN * sizeof(float));
 
-  printf("----load_nnb_network----\n");
+  printf("----load NNB network ----\n");
   fflush(stdout);
   network = load_nnb_network(setting.nnb_path, s_model_buffer);
   if (network == NULL)
@@ -150,7 +154,6 @@ int dnnrt_audiocnn(int argc, char *argv[])
       printf("load nnb file failed\n");
       goto load_error;
     }
-  printf("exit load nnb file\n");
   fflush(stdout);
 
   /* Step-A: initialize the whole dnnrt subsystem */
@@ -180,8 +183,9 @@ int dnnrt_audiocnn(int argc, char *argv[])
   /* Step-C: perform inference after feeding inputs */
   printf("----STEP:C----\n");
   fflush(stdout);
-  printf("start dnn_runtime_forward()\n");
-  printf(" -->> input[0]=0x%08x\n", inputs[0]);
+  printf("-->> Start dnn_runtime_forward with... \n");
+  printf("---->> Input Buffer is on 0x%08x\n", inputs[0]);
+  printf("---->> NNB is on 0x%08x\n", s_model_buffer);
   fflush(stdout);
   
   gettimeofday(&begin, 0);
@@ -210,7 +214,7 @@ int dnnrt_audiocnn(int argc, char *argv[])
     {
       output_buffer = dnn_runtime_output_buffer(&rt, output_idx);
       buf_cnt = dnn_runtime_output_size(&rt, output_idx);
-      printf("<%d> ready output (0x%08x, num=%d)\n", output_idx, output_buffer, buf_cnt);
+      printf("<<-- Output[%d] on 0x%08x, num=%d\n", output_idx, output_buffer, buf_cnt);
       dump_float((float *)output_buffer, buf_cnt);
     }
 
@@ -223,8 +227,8 @@ rt_error:
 dnn_error:
 load_error:
   memtile_free(&shm_input);
-err_input_alloc:
+//err_model_alloc:
   memtile_free(&shm_model);
-err_model_alloc:
+err_input_alloc:
   return 0;
 }

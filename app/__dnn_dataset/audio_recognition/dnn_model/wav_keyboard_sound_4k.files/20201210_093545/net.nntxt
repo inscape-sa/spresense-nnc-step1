@@ -1,0 +1,2052 @@
+global_config {
+  default_context {
+    array_class: "CpuCachedArray"
+    backends: "cpu:float"
+  }
+}
+training_config {
+  max_epoch: 150
+  iter_per_epoch: 15
+  save_best: true
+  monitor_interval: 10
+}
+network {
+  name: "Main"
+  batch_size: 128
+  variable {
+    name: "Input"
+    type: "Buffer"
+    shape: { dim:-1 dim: 2048 dim: 1 }
+  }
+  variable {
+    name: "Unit/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 1 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Affine/affine/W"
+    type: "Parameter"
+    shape: { dim: 80 dim: 8 }
+    initializer {
+      type: "NormalAffineGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Affine/affine/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "CategoricalCrossEntropy_T"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 }
+  }
+  variable {
+    name: "Transpose"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Reshape"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "ImageAugmentation"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Unit/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1021 }
+  }
+  variable {
+    name: "Unit_2/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 507 }
+  }
+  variable {
+    name: "Unit_3/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 250 }
+  }
+  variable {
+    name: "Unit_4/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 122 }
+  }
+  variable {
+    name: "Unit_5/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 58 }
+  }
+  variable {
+    name: "Unit_6/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 26 }
+  }
+  variable {
+    name: "Unit_7/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 10 }
+  }
+  variable {
+    name: "Affine"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  variable {
+    name: "Softmax"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  variable {
+    name: "CategoricalCrossEntropy"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 }
+  }
+  function {
+    name: "Transpose"
+    type: "Transpose"
+    input: "Input"
+    output: "Transpose"
+    transpose_param {
+      axes: 0
+      axes: 2
+      axes: 1
+    }
+  }
+  function {
+    name: "Reshape"
+    type: "Reshape"
+    input: "Transpose"
+    output: "Reshape"
+    reshape_param {
+      shape: { dim: -1 dim: 1 dim: 1 dim: 2048 }
+    }
+  }
+  function {
+    name: "ImageAugmentation"
+    type: "ImageAugmentation"
+    input: "Reshape"
+    output: "ImageAugmentation"
+    image_augmentation_param {
+      shape: { dim: 1 dim: 1 dim: 2048 }
+      pad: { dim: 0 dim: 1024 }
+      min_scale: 1
+      max_scale: 1
+      angle: 0
+      aspect_ratio: 1
+      distortion: 0
+      flip_lr: false
+      flip_ud: false
+      brightness: 0
+      brightness_each: false
+      contrast: 2
+      contrast_center: 0
+      contrast_each: false
+      noise: 0
+      seed: -1
+    }
+  }
+  function {
+    name: "Unit/Convolution"
+    type: "Convolution"
+    input: "ImageAugmentation"
+    input: "Unit/Convolution/conv/W"
+    input: "Unit/Convolution/conv/b"
+    output: "Unit/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit/ReLU"
+    type: "ReLU"
+    input: "Unit/Convolution"
+    output: "Unit/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit/ReLU"
+    output: "Unit/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_2/Convolution"
+    type: "Convolution"
+    input: "Unit/MaxPooling"
+    input: "Unit_2/Convolution/conv/W"
+    input: "Unit_2/Convolution/conv/b"
+    output: "Unit_2/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_2/ReLU"
+    type: "ReLU"
+    input: "Unit_2/Convolution"
+    output: "Unit_2/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_2/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_2/ReLU"
+    output: "Unit_2/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_3/Convolution"
+    type: "Convolution"
+    input: "Unit_2/MaxPooling"
+    input: "Unit_3/Convolution/conv/W"
+    input: "Unit_3/Convolution/conv/b"
+    output: "Unit_3/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_3/ReLU"
+    type: "ReLU"
+    input: "Unit_3/Convolution"
+    output: "Unit_3/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_3/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_3/ReLU"
+    output: "Unit_3/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_4/Convolution"
+    type: "Convolution"
+    input: "Unit_3/MaxPooling"
+    input: "Unit_4/Convolution/conv/W"
+    input: "Unit_4/Convolution/conv/b"
+    output: "Unit_4/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_4/ReLU"
+    type: "ReLU"
+    input: "Unit_4/Convolution"
+    output: "Unit_4/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_4/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_4/ReLU"
+    output: "Unit_4/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_5/Convolution"
+    type: "Convolution"
+    input: "Unit_4/MaxPooling"
+    input: "Unit_5/Convolution/conv/W"
+    input: "Unit_5/Convolution/conv/b"
+    output: "Unit_5/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_5/ReLU"
+    type: "ReLU"
+    input: "Unit_5/Convolution"
+    output: "Unit_5/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_5/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_5/ReLU"
+    output: "Unit_5/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_6/Convolution"
+    type: "Convolution"
+    input: "Unit_5/MaxPooling"
+    input: "Unit_6/Convolution/conv/W"
+    input: "Unit_6/Convolution/conv/b"
+    output: "Unit_6/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_6/ReLU"
+    type: "ReLU"
+    input: "Unit_6/Convolution"
+    output: "Unit_6/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_6/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_6/ReLU"
+    output: "Unit_6/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_7/Convolution"
+    type: "Convolution"
+    input: "Unit_6/MaxPooling"
+    input: "Unit_7/Convolution/conv/W"
+    input: "Unit_7/Convolution/conv/b"
+    output: "Unit_7/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_7/ReLU"
+    type: "ReLU"
+    input: "Unit_7/Convolution"
+    output: "Unit_7/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_7/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_7/ReLU"
+    output: "Unit_7/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Affine"
+    type: "Affine"
+    input: "Unit_7/MaxPooling"
+    input: "Affine/affine/W"
+    input: "Affine/affine/b"
+    output: "Affine"
+    affine_param {
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Softmax"
+    type: "Softmax"
+    input: "Affine"
+    output: "Softmax"
+    softmax_param {
+      axis: 1
+    }
+  }
+  function {
+    name: "CategoricalCrossEntropy"
+    type: "CategoricalCrossEntropy"
+    input: "Softmax"
+    input: "CategoricalCrossEntropy_T"
+    output: "CategoricalCrossEntropy"
+    categorical_cross_entropy_param {
+      axis: 1
+    }
+  }
+}
+network {
+  name: "MainValidation"
+  batch_size: 128
+  variable {
+    name: "Input"
+    type: "Buffer"
+    shape: { dim:-1 dim: 2048 dim: 1 }
+  }
+  variable {
+    name: "Unit/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 1 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Affine/affine/W"
+    type: "Parameter"
+    shape: { dim: 80 dim: 8 }
+    initializer {
+      type: "NormalAffineGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Affine/affine/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "CategoricalCrossEntropy_T"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 }
+  }
+  variable {
+    name: "Transpose"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Reshape"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Unit/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1021 }
+  }
+  variable {
+    name: "Unit_2/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 507 }
+  }
+  variable {
+    name: "Unit_3/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 250 }
+  }
+  variable {
+    name: "Unit_4/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 122 }
+  }
+  variable {
+    name: "Unit_5/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 58 }
+  }
+  variable {
+    name: "Unit_6/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 26 }
+  }
+  variable {
+    name: "Unit_7/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 10 }
+  }
+  variable {
+    name: "Affine"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  variable {
+    name: "Softmax"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  variable {
+    name: "CategoricalCrossEntropy"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 }
+  }
+  function {
+    name: "Transpose"
+    type: "Transpose"
+    input: "Input"
+    output: "Transpose"
+    transpose_param {
+      axes: 0
+      axes: 2
+      axes: 1
+    }
+  }
+  function {
+    name: "Reshape"
+    type: "Reshape"
+    input: "Transpose"
+    output: "Reshape"
+    reshape_param {
+      shape: { dim: -1 dim: 1 dim: 1 dim: 2048 }
+    }
+  }
+  function {
+    name: "Unit/Convolution"
+    type: "Convolution"
+    input: "Reshape"
+    input: "Unit/Convolution/conv/W"
+    input: "Unit/Convolution/conv/b"
+    output: "Unit/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit/ReLU"
+    type: "ReLU"
+    input: "Unit/Convolution"
+    output: "Unit/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit/ReLU"
+    output: "Unit/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_2/Convolution"
+    type: "Convolution"
+    input: "Unit/MaxPooling"
+    input: "Unit_2/Convolution/conv/W"
+    input: "Unit_2/Convolution/conv/b"
+    output: "Unit_2/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_2/ReLU"
+    type: "ReLU"
+    input: "Unit_2/Convolution"
+    output: "Unit_2/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_2/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_2/ReLU"
+    output: "Unit_2/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_3/Convolution"
+    type: "Convolution"
+    input: "Unit_2/MaxPooling"
+    input: "Unit_3/Convolution/conv/W"
+    input: "Unit_3/Convolution/conv/b"
+    output: "Unit_3/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_3/ReLU"
+    type: "ReLU"
+    input: "Unit_3/Convolution"
+    output: "Unit_3/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_3/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_3/ReLU"
+    output: "Unit_3/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_4/Convolution"
+    type: "Convolution"
+    input: "Unit_3/MaxPooling"
+    input: "Unit_4/Convolution/conv/W"
+    input: "Unit_4/Convolution/conv/b"
+    output: "Unit_4/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_4/ReLU"
+    type: "ReLU"
+    input: "Unit_4/Convolution"
+    output: "Unit_4/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_4/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_4/ReLU"
+    output: "Unit_4/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_5/Convolution"
+    type: "Convolution"
+    input: "Unit_4/MaxPooling"
+    input: "Unit_5/Convolution/conv/W"
+    input: "Unit_5/Convolution/conv/b"
+    output: "Unit_5/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_5/ReLU"
+    type: "ReLU"
+    input: "Unit_5/Convolution"
+    output: "Unit_5/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_5/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_5/ReLU"
+    output: "Unit_5/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_6/Convolution"
+    type: "Convolution"
+    input: "Unit_5/MaxPooling"
+    input: "Unit_6/Convolution/conv/W"
+    input: "Unit_6/Convolution/conv/b"
+    output: "Unit_6/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_6/ReLU"
+    type: "ReLU"
+    input: "Unit_6/Convolution"
+    output: "Unit_6/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_6/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_6/ReLU"
+    output: "Unit_6/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_7/Convolution"
+    type: "Convolution"
+    input: "Unit_6/MaxPooling"
+    input: "Unit_7/Convolution/conv/W"
+    input: "Unit_7/Convolution/conv/b"
+    output: "Unit_7/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_7/ReLU"
+    type: "ReLU"
+    input: "Unit_7/Convolution"
+    output: "Unit_7/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_7/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_7/ReLU"
+    output: "Unit_7/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Affine"
+    type: "Affine"
+    input: "Unit_7/MaxPooling"
+    input: "Affine/affine/W"
+    input: "Affine/affine/b"
+    output: "Affine"
+    affine_param {
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Softmax"
+    type: "Softmax"
+    input: "Affine"
+    output: "Softmax"
+    softmax_param {
+      axis: 1
+    }
+  }
+  function {
+    name: "CategoricalCrossEntropy"
+    type: "CategoricalCrossEntropy"
+    input: "Softmax"
+    input: "CategoricalCrossEntropy_T"
+    output: "CategoricalCrossEntropy"
+    categorical_cross_entropy_param {
+      axis: 1
+    }
+  }
+}
+network {
+  name: "MainRuntime"
+  batch_size: 128
+  variable {
+    name: "Input"
+    type: "Buffer"
+    shape: { dim:-1 dim: 2048 dim: 1 }
+  }
+  variable {
+    name: "Unit/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 1 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_2/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_3/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_4/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_5/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_6/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/W"
+    type: "Parameter"
+    shape: { dim: 8 dim: 8 dim: 1 dim: 7 }
+    initializer {
+      type: "NormalConvolutionGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Unit_7/Convolution/conv/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Affine/affine/W"
+    type: "Parameter"
+    shape: { dim: 80 dim: 8 }
+    initializer {
+      type: "NormalAffineGlorot"
+      multiplier: 1
+    }
+  }
+  variable {
+    name: "Affine/affine/b"
+    type: "Parameter"
+    shape: { dim: 8 }
+    initializer {
+      type: "Constant"
+      multiplier: 0
+    }
+  }
+  variable {
+    name: "Transpose"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Reshape"
+    type: "Buffer"
+    shape: { dim:-1 dim: 1 dim: 1 dim: 2048 }
+  }
+  variable {
+    name: "Unit/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 2042 }
+  }
+  variable {
+    name: "Unit/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1021 }
+  }
+  variable {
+    name: "Unit_2/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 1015 }
+  }
+  variable {
+    name: "Unit_2/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 507 }
+  }
+  variable {
+    name: "Unit_3/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 501 }
+  }
+  variable {
+    name: "Unit_3/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 250 }
+  }
+  variable {
+    name: "Unit_4/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 244 }
+  }
+  variable {
+    name: "Unit_4/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 122 }
+  }
+  variable {
+    name: "Unit_5/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 116 }
+  }
+  variable {
+    name: "Unit_5/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 58 }
+  }
+  variable {
+    name: "Unit_6/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 52 }
+  }
+  variable {
+    name: "Unit_6/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 26 }
+  }
+  variable {
+    name: "Unit_7/Convolution"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/ReLU"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 20 }
+  }
+  variable {
+    name: "Unit_7/MaxPooling"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 dim: 1 dim: 10 }
+  }
+  variable {
+    name: "Affine"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  variable {
+    name: "Softmax"
+    type: "Buffer"
+    shape: { dim:-1 dim: 8 }
+  }
+  function {
+    name: "Transpose"
+    type: "Transpose"
+    input: "Input"
+    output: "Transpose"
+    transpose_param {
+      axes: 0
+      axes: 2
+      axes: 1
+    }
+  }
+  function {
+    name: "Reshape"
+    type: "Reshape"
+    input: "Transpose"
+    output: "Reshape"
+    reshape_param {
+      shape: { dim: -1 dim: 1 dim: 1 dim: 2048 }
+    }
+  }
+  function {
+    name: "Unit/Convolution"
+    type: "Convolution"
+    input: "Reshape"
+    input: "Unit/Convolution/conv/W"
+    input: "Unit/Convolution/conv/b"
+    output: "Unit/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit/ReLU"
+    type: "ReLU"
+    input: "Unit/Convolution"
+    output: "Unit/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit/ReLU"
+    output: "Unit/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_2/Convolution"
+    type: "Convolution"
+    input: "Unit/MaxPooling"
+    input: "Unit_2/Convolution/conv/W"
+    input: "Unit_2/Convolution/conv/b"
+    output: "Unit_2/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_2/ReLU"
+    type: "ReLU"
+    input: "Unit_2/Convolution"
+    output: "Unit_2/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_2/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_2/ReLU"
+    output: "Unit_2/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_3/Convolution"
+    type: "Convolution"
+    input: "Unit_2/MaxPooling"
+    input: "Unit_3/Convolution/conv/W"
+    input: "Unit_3/Convolution/conv/b"
+    output: "Unit_3/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_3/ReLU"
+    type: "ReLU"
+    input: "Unit_3/Convolution"
+    output: "Unit_3/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_3/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_3/ReLU"
+    output: "Unit_3/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_4/Convolution"
+    type: "Convolution"
+    input: "Unit_3/MaxPooling"
+    input: "Unit_4/Convolution/conv/W"
+    input: "Unit_4/Convolution/conv/b"
+    output: "Unit_4/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_4/ReLU"
+    type: "ReLU"
+    input: "Unit_4/Convolution"
+    output: "Unit_4/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_4/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_4/ReLU"
+    output: "Unit_4/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_5/Convolution"
+    type: "Convolution"
+    input: "Unit_4/MaxPooling"
+    input: "Unit_5/Convolution/conv/W"
+    input: "Unit_5/Convolution/conv/b"
+    output: "Unit_5/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_5/ReLU"
+    type: "ReLU"
+    input: "Unit_5/Convolution"
+    output: "Unit_5/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_5/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_5/ReLU"
+    output: "Unit_5/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_6/Convolution"
+    type: "Convolution"
+    input: "Unit_5/MaxPooling"
+    input: "Unit_6/Convolution/conv/W"
+    input: "Unit_6/Convolution/conv/b"
+    output: "Unit_6/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_6/ReLU"
+    type: "ReLU"
+    input: "Unit_6/Convolution"
+    output: "Unit_6/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_6/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_6/ReLU"
+    output: "Unit_6/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Unit_7/Convolution"
+    type: "Convolution"
+    input: "Unit_6/MaxPooling"
+    input: "Unit_7/Convolution/conv/W"
+    input: "Unit_7/Convolution/conv/b"
+    output: "Unit_7/Convolution"
+    convolution_param {
+      pad: { dim: 0 dim: 0 }
+      stride: { dim: 1 dim: 1 }
+      dilation: { dim: 1 dim: 1 }
+      group: 1
+      channel_last: false
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Unit_7/ReLU"
+    type: "ReLU"
+    input: "Unit_7/Convolution"
+    output: "Unit_7/ReLU"
+    relu_param {
+      inplace: True
+    }
+  }
+  function {
+    name: "Unit_7/MaxPooling"
+    type: "MaxPooling"
+    input: "Unit_7/ReLU"
+    output: "Unit_7/MaxPooling"
+    max_pooling_param {
+      kernel: { dim: 1 dim: 2 }
+      stride: { dim: 1 dim: 2 }
+      ignore_border: true
+      pad: { dim: 0 dim: 0 }
+      channel_last: false
+    }
+  }
+  function {
+    name: "Affine"
+    type: "Affine"
+    input: "Unit_7/MaxPooling"
+    input: "Affine/affine/W"
+    input: "Affine/affine/b"
+    output: "Affine"
+    affine_param {
+      base_axis: 1
+    }
+  }
+  function {
+    name: "Softmax"
+    type: "Softmax"
+    input: "Affine"
+    output: "Softmax"
+    softmax_param {
+      axis: 1
+    }
+  }
+}
+dataset {
+  name: "Training"
+  uri: "C:\\msys64\\home\\shino\\spresense-nnc-step1\\app\\__dnn_dataset\\audio_recognition\\4kHzSampling\\SoundSet_Train_0to7.csv"
+  cache_dir: "C:\\msys64\\home\\shino\\spresense-nnc-step1\\app\\__dnn_dataset\\audio_recognition\\4kHzSampling\\SoundSet_Train_0to7.cache"
+  overwrite_cache: false
+  create_cache_explicitly: true
+  shuffle: true
+  no_image_normalization: false
+  batch_size: 128
+}
+dataset {
+  name: "Validation"
+  uri: "C:\\msys64\\home\\shino\\spresense-nnc-step1\\app\\__dnn_dataset\\audio_recognition\\4kHzSampling\\SoundSet_Evaluate_0to7.csv"
+  cache_dir: "C:\\msys64\\home\\shino\\spresense-nnc-step1\\app\\__dnn_dataset\\audio_recognition\\4kHzSampling\\SoundSet_Evaluate_0to7.cache"
+  overwrite_cache: false
+  create_cache_explicitly: true
+  shuffle: true
+  no_image_normalization: false
+  batch_size: 128
+}
+optimizer {
+  start_iter: 0
+  end_iter: 0
+  name: "Optimizer"
+  update_interval: 1
+  network_name: "Main"
+  dataset_name: "Training"
+  solver {
+    type: "Adam"
+    weight_decay: 0
+    adam_param {
+      alpha: 0.001
+      beta1: 0.9
+      beta2: 0.999
+      eps: 1e-08
+    }
+    lr_scheduler_type: "Exponential"
+    exponential_scheduler_param {
+      gamma: 1
+      iter_interval: 15
+    }
+    lr_decay: 1
+    lr_decay_interval: 15
+    lr_warmup_scheduler_type: "None"
+  }
+  data_variable {
+    variable_name: "Input"
+    data_name: "x"
+  }
+  data_variable {
+    variable_name: "CategoricalCrossEntropy_T"
+    data_name: "y"
+  }
+  loss_variable {
+    variable_name: "CategoricalCrossEntropy"
+  }
+  parameter_variable {
+    variable_name: "Unit/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_2/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_2/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_3/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_3/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_4/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_4/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_5/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_5/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_6/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_6/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_7/Convolution/conv/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Unit_7/Convolution/conv/b"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Affine/affine/W"
+    learning_rate_multiplier: 1
+  }
+  parameter_variable {
+    variable_name: "Affine/affine/b"
+    learning_rate_multiplier: 1
+  }
+}
+monitor {
+  name: "train_error"
+  network_name: "MainValidation"
+  dataset_name: "Training"
+  data_variable {
+    variable_name: "Input"
+    data_name: "x"
+  }
+  data_variable {
+    variable_name: "CategoricalCrossEntropy_T"
+    data_name: "y"
+  }
+  monitor_variable {
+    type: "Error"
+    variable_name: "CategoricalCrossEntropy"
+  }
+}
+monitor {
+  name: "valid_error"
+  network_name: "MainValidation"
+  dataset_name: "Validation"
+  data_variable {
+    variable_name: "Input"
+    data_name: "x"
+  }
+  data_variable {
+    variable_name: "CategoricalCrossEntropy_T"
+    data_name: "y"
+  }
+  monitor_variable {
+    type: "Error"
+    variable_name: "CategoricalCrossEntropy"
+  }
+}
+executor {
+  name: "Executor"
+  network_name: "MainRuntime"
+  num_evaluations: 1
+  repeat_evaluation_type: "mean"
+  need_back_propagation: false
+  no_image_normalization: false
+  data_variable {
+    variable_name: "Input"
+    data_name: "x"
+  }
+  output_variable {
+    variable_name: "Softmax"
+    data_name: "y'"
+  }
+  parameter_variable {
+    variable_name: "Unit/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_2/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_2/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_3/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_3/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_4/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_4/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_5/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_5/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_6/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_6/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Unit_7/Convolution/conv/W"
+  }
+  parameter_variable {
+    variable_name: "Unit_7/Convolution/conv/b"
+  }
+  parameter_variable {
+    variable_name: "Affine/affine/W"
+  }
+  parameter_variable {
+    variable_name: "Affine/affine/b"
+  }
+}
