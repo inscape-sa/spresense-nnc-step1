@@ -40,6 +40,7 @@ typedef struct
 #define INPUT_WAVE_SIZE (INPUT_WAVE_LEN * (sizeof(float)))
 #define ALLOC_UNIT      (CXD5602_SINGLE_TILE_SIZE)
 
+// #define USE_STANDALONE_MODEL_MEM
 
 /****************************************************************************
  * Private Functions
@@ -99,7 +100,7 @@ static void print_output_format(dnn_runtime_t *prt)
     {
       cnt = dnn_runtime_output_size(prt, idx);
       ndim = dnn_runtime_output_ndim(prt, idx);
-      printf("output[%d] is constructed from cnt=%d dmis=%d)\n", idx, cnt, ndim);
+      printf("output[%d] is constructed from cnt=%d dmis=%d\n", idx, cnt, ndim);
     }
 }
 
@@ -130,14 +131,14 @@ int dnnrt_audiocnn(int argc, char *argv[])
   }
   printf("ADDR:%08x: for s_wave_buffer (%dbyte)\n", s_wave_buffer, INPUT_WAVE_LEN * sizeof(float));
   s_model_buffer = (void *)(((uint32_t)(s_wave_buffer)) + INPUT_WAVE_LEN * sizeof(float));
-#if 0  
+#ifdef USE_STANDALONE_MODEL_MEM
   s_model_buffer = memtile_alloc(&shm_model, ALLOC_UNIT);
   if (s_model_buffer == NULL) {
     ret = -errno;
     goto err_model_alloc;
   }
 #endif
-  printf("ADDR:%08x: for s_model_buffer (%byte)\n", s_model_buffer, CXD5602_SINGLE_TILE_SIZE - (INPUT_WAVE_LEN * sizeof(float)));
+  printf("ADDR:%08x: for s_model_buffer (%dbyte)\n", s_model_buffer, CXD5602_SINGLE_TILE_SIZE - (INPUT_WAVE_LEN * sizeof(float)));
   printf("----load WAVE DATA as input data ----\n");
   ret = csv_load(setting.csv_path, 1.0f, s_wave_buffer, INPUT_WAVE_LEN);
   if (ret != 0) {
@@ -227,8 +228,10 @@ rt_error:
 dnn_error:
 load_error:
   memtile_free(&shm_input);
-//err_model_alloc:
+#ifdef USE_STANDALONE_MODEL_MEM
+err_model_alloc:
   memtile_free(&shm_model);
+#endif /* USE_STANDALONE_MODEL_MEM */
 err_input_alloc:
   return 0;
 }
